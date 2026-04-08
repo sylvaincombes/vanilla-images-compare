@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Images Compare</title>
+        <link rel="stylesheet" href="assets/css/example.css" />
+        <link rel="stylesheet" href="../build/images-compare.min.css" />
+    </head>
+    <body>
+        <div class="page-container">
+            <h1>Images Compare</h1>
+            <h2>Example</h2>
+
+            <!-- Test 1 -->
+            <div class="js-img-compare">
+                <div style="display: none">
+                    <span class="images-compare-label">Before</span>
+                    <img
+                        src="assets/img/01-celine-skowron-before.jpg"
+                        alt="Before"
+                    />
+                </div>
+                <div>
+                    <span class="images-compare-label">After</span>
+                    <img
+                        src="assets/img/01-celine-skowron-after.jpg"
+                        alt="After"
+                    />
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn js-front-btn">
+                    Show front image
+                </button>
+                <button type="button" class="btn js-back-btn">
+                    Show back image
+                </button>
+                <button type="button" class="btn js-toggle-btn">Toggle</button>
+            </div>
+
+            <footer>
+                Image credits :
+                <a href="https://celine-skowron.fr">Céline Skowron</a>
+            </footer>
+        </div>
+
+        <script
+            type="text/javascript"
+            src="../build/images-compare.min.js"
+        ></script>
+        <script
+            type="text/javascript"
+            src="assets/js/images-compare-controls.js"
+        ></script>
+        <script type="text/javascript">
+            document.addEventListener("DOMContentLoaded", () => {
+                const imagesCompareElement = new ImagesCompare(
+                    document.querySelector(".js-img-compare"),
+                );
+                const imagesCompare = imagesCompareElement;
+                const events = imagesCompare.events();
+
+                imagesCompare.on(events.changed, (event) => {
+                    console.log(events.changed);
+                    console.log(event.ratio);
+                    if (event.ratio < 0.4) {
+                        console.log("We see more than half of the back image");
+                    }
+                    if (event.ratio > 0.6) {
+                        console.log("We see more than half of the front image");
+                    }
+
+                    if (event.ratio <= 0) {
+                        console.log("We see completely back image");
+                    }
+
+                    if (event.ratio >= 1) {
+                        console.log("We see completely front image");
+                    }
+                });
+                window.imagesCompareBindControls(imagesCompare);
+            });
+        </script>
+    </body>
+</html>

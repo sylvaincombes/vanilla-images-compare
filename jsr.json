@@ -1,0 +1,20 @@
+{
+    "name": "@sylvaincombes/vanilla-images-compare",
+    "version": "1.0.0",
+    "license": "MIT",
+    "exports": "./src/images-compare.ts",
+    "publish": {
+        "exclude": [
+            "src/tests",
+            "examples",
+            "scripts",
+            "docs",
+            ".github",
+            ".githooks",
+            "coverage",
+            "logs",
+            "node_modules",
+            "build"
+        ]
+    }
+}

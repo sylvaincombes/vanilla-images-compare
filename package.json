@@ -1,0 +1,73 @@
+{
+  "name": "vanilla-images-compare",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Vanilla JS library to compare two images with a draggable before/after slider",
+  "keywords": [
+    "image-compare",
+    "image-comparison",
+    "before-after",
+    "before-after-slider",
+    "image-slider",
+    "slider",
+    "compare",
+    "before",
+    "after",
+    "drag",
+    "touch",
+    "responsive",
+    "vanilla",
+    "typescript",
+    "no-dependency",
+    "plugin"
+  ],
+  "files": [
+    "build/",
+    "README.md",
+    "LICENSE.md",
+    "CHANGELOG.md"
+  ],
+  "main": "build/images-compare.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sylvaincombes/vanilla-images-compare.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sylvaincombes/vanilla-images-compare/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.3",
+    "@vitest/coverage-v8": "^4.1.2",
+    "esbuild": "^0.25.9",
+    "jsdom": "^29.0.1",
+    "terser": "^5.46.1",
+    "vitest": "^4.1.2"
+  },
+  "scripts": {
+    "lint": "biome check src",
+    "lint:fix": "biome check --write src",
+    "format": "biome format --write src",
+    "build:ts": "esbuild ./src/images-compare.ts --bundle --platform=browser --target=es2020 --outfile=./build/images-compare.js",
+    "minify:js": "terser ./build/images-compare.js --compress --mangle --source-map 'url=images-compare.min.js.map' --output ./build/images-compare.min.js",
+    "copy:css": "cp ./src/images-compare.css ./build/images-compare.css",
+    "minify:css": "esbuild ./src/images-compare.css --minify --outfile=./build/images-compare.min.css",
+    "build": "bun run lint && bun run build:ts && bun run copy:css && bun run minify",
+    "copy": "bun run copy:js && bun run copy:css",
+    "minify": "bun run minify:js && bun run minify:css",
+    "test": "vitest run",
+    "test:unit": "vitest run --passWithNoTests",
+    "test:coverage": "vitest run --coverage",
+    "test:unit:watch": "vitest",
+    "test:serve": "bunx serve . --listen 41721",
+    "test:open": "bunx serve . --listen 41721 & bun run scripts/open-url.js http://localhost:41721/examples/index.html",
+    "version:bump": "bun run scripts/bump-version.js",
+    "example:serve": "bunx serve . --listen 41721",
+    "example:open": "bunx serve . --listen 41721 & bun run scripts/open-url.js http://localhost:41721/examples/index.html"
+  },
+  "author": "Sylvain Combes <combes.sylvain@gmail.com> (http://www.sylvaincombes.com)",
+  "contributors": [
+    "Céline Skowron <skowron.celine@gmail.com> (http://celine-skowron.fr)"
+  ],
+  "license": "MIT"
+}
