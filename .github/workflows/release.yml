@@ -31,7 +31,6 @@ jobs:
       - name: Build
         run: bun run build
       - name: Publish to npm
-        continue-on-error: true
         run: npm publish --provenance
       - name: Publish to JSR
         run: bunx jsr publish
