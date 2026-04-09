@@ -30,6 +30,11 @@ jobs:
         run: bun install --frozen-lockfile
       - name: Build
         run: bun run build
+      - name: Publish to npm
+        continue-on-error: true
+        run: npm publish --provenance
+      - name: Publish to JSR
+        run: bunx jsr publish
       - name: Package build artifacts
         run: |
           mkdir -p dist
@@ -37,11 +42,6 @@ jobs:
           cp LICENSE.md dist/LICENSE.md
           cd dist
           zip -r ../vanilla-images-compare-build.zip .
-      - name: Publish to npm
-        continue-on-error: true
-        run: npm publish --provenance
-      - name: Publish to JSR
-        run: bunx jsr publish
       - name: Extract changelog for this version
         id: changelog
         run: |
