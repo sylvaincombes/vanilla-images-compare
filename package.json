@@ -1,6 +1,6 @@
 {
   "name": "vanilla-images-compare",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Vanilla JS library to compare two images with a draggable before/after slider",
   "keywords": [

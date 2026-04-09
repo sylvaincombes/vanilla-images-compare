@@ -8,6 +8,29 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 _Nothing at this moment_
 
+## [1.0.1] - 2026-04-10
+
+### Fixed
+
+- Remove `declare global` augmentation for JSR compatibility (use `WeakMap` for instance tracking)
+- Fix test assertion for default `initVisibleRatio` (0.5, not 0.25)
+
+### Changed
+
+- Add `"type": "module"` to package.json
+- Add `"files"` whitelist for npm publishing
+- Add `copy:css` to build chain (non-minified CSS now included in build output)
+- Add `CHANGELOG.md` to npm package
+- Bump `esbuild` to 0.28.0
+- Bump `actions/checkout` to v5 (Node 24 native)
+- Set `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24` in CI/release workflows
+- Pin bun version in CI instead of `bun-version-file`
+- Replace `gitleaks-action` with direct binary install
+- Use `npm publish --provenance` with OIDC instead of `bun publish`
+- Extract changelog for GitHub Release body
+- Add version bump script (`bun run version:bump <version>`)
+- Disable `noNonNullAssertion` and `noExplicitAny` lint rules for test files
+
 ## [1.0.0] - 2026-03-25
 
 Initial release as a standalone vanilla JavaScript library.

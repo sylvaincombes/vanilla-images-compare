@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import "../images-compare.ts";
+import ImagesCompare from "../images-compare";
 
 describe("ImagesCompare (vanilla)", () => {
 	let container: HTMLElement | null = null;
-	let instance: InstanceType<typeof window.ImagesCompare> | null = null;
+	let instance: ImagesCompare | null = null;
 
 	beforeEach(() => {
 		document.body.innerHTML =
@@ -20,19 +20,19 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should initialize and set initial ratio", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 			addDragHandle: false,
 		});
 
-		expect(instance).toBeInstanceOf(window.ImagesCompare);
+		expect(instance).toBeInstanceOf(ImagesCompare);
 		expect(instance.frontElement).toBeDefined();
 		expect(instance.backElement).toBeDefined();
 		expect(instance.getValue()).toBeCloseTo(0.5, 4);
 	});
 
 	it("should update value when setValue is called", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 			addDragHandle: false,
 		});
@@ -42,7 +42,7 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should dispatch changed event for value change", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 			addDragHandle: false,
 		});
@@ -55,7 +55,7 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should initialize with default options", () => {
-		instance = new window.ImagesCompare(container!);
+		instance = new ImagesCompare(container!);
 
 		expect(instance.getValue()).toBe(0.5);
 		expect(instance.separator).toBeDefined();
@@ -63,21 +63,21 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should respect addSeparator option", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 		});
 		expect(instance.separator).toBeNull();
 	});
 
 	it("should respect addDragHandle option", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addDragHandle: false,
 		});
 		expect(instance.dragHandle).toBeNull();
 	});
 
 	it("should handle setValue with animation", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addDragHandle: false,
 		});
 
@@ -91,7 +91,7 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should clamp ratio values between 0 and 1", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addDragHandle: false,
 		});
 
@@ -103,7 +103,7 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should handle NaN ratio values", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addDragHandle: false,
 		});
 
@@ -115,13 +115,13 @@ describe("ImagesCompare (vanilla)", () => {
 		const callback = vi.fn();
 		container!.addEventListener("imagesCompare:initialised", callback);
 
-		instance = new window.ImagesCompare(container!, {});
+		instance = new ImagesCompare(container!, {});
 
 		expect(callback).toHaveBeenCalled();
 	});
 
 	it("should handle off method", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 			addDragHandle: false,
 		});
@@ -135,7 +135,7 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should return events object", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addDragHandle: false,
 		});
 
@@ -146,32 +146,32 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should handle destroy method", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 			addDragHandle: false,
 		});
 
 		expect(instance.destroy()).toBe(instance);
-		expect(container?._imagesCompareInstance).toBeUndefined();
+		expect(ImagesCompare.getInstance(container!)).toBeUndefined();
 	});
 
 	it("should handle static initAll method", () => {
-		const instances = window.ImagesCompare.initAll("#images-compare");
+		const instances = ImagesCompare.initAll("#images-compare");
 		expect(instances).toHaveLength(1);
-		expect(instances[0]).toBeInstanceOf(window.ImagesCompare);
+		expect(instances[0]).toBeInstanceOf(ImagesCompare);
 	});
 
 	it("should handle static getInstance method", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addDragHandle: false,
 		});
 
-		const retrieved = window.ImagesCompare.getInstance(container!);
+		const retrieved = ImagesCompare.getInstance(container!);
 		expect(retrieved).toBe(instance);
 	});
 
 	it("should handle precision option", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 			addDragHandle: false,
 		});
@@ -182,7 +182,7 @@ describe("ImagesCompare (vanilla)", () => {
 
 	it("should throw error for invalid element", () => {
 		expect(() => {
-			new window.ImagesCompare(null as any);
+			new ImagesCompare(null as any);
 		}).toThrow(TypeError);
 	});
 
@@ -191,14 +191,14 @@ describe("ImagesCompare (vanilla)", () => {
 		document.body.appendChild(emptyContainer);
 
 		expect(() => {
-			new window.ImagesCompare(emptyContainer);
+			new ImagesCompare(emptyContainer);
 		}).toThrow(Error);
 
 		document.body.removeChild(emptyContainer);
 	});
 
 	it("should handle interaction mode click", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			interactionMode: "click",
 			addSeparator: false,
 			addDragHandle: false,
@@ -217,7 +217,7 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should handle interaction mode mousemove", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 			addDragHandle: false,
 		});
@@ -226,7 +226,7 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should handle resize event", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addDragHandle: false,
 		});
 
@@ -253,7 +253,7 @@ describe("ImagesCompare (vanilla)", () => {
 		imgContainer.appendChild(img2);
 		document.body.appendChild(imgContainer);
 
-		instance = new window.ImagesCompare(imgContainer, {
+		instance = new ImagesCompare(imgContainer, {
 			addSeparator: false,
 			addDragHandle: false,
 		});
@@ -267,7 +267,7 @@ describe("ImagesCompare (vanilla)", () => {
 	});
 
 	it("should handle animation easing", () => {
-		instance = new window.ImagesCompare(container!, {
+		instance = new ImagesCompare(container!, {
 			addSeparator: false,
 			addDragHandle: false,
 		});

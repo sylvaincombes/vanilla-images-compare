@@ -1,3 +1,5 @@
+const instanceMap = new WeakMap<HTMLElement, ImagesCompare>();
+
 type InteractionMode = "drag" | "mousemove" | "click";
 
 type ImagesCompareEvents =
@@ -102,7 +104,7 @@ class ImagesCompare {
 		};
 
 		this._initOnce();
-		this.element._imagesCompareInstance = this;
+		instanceMap.set(this.element, this);
 	}
 
 	public static initAll(
@@ -119,18 +121,14 @@ class ImagesCompare {
 		if (!nodes) return [];
 
 		return Array.from(nodes).map((el) => {
-			const element = el as HTMLElement & {
-				_imagesCompareInstance?: ImagesCompare;
-			};
-			if (element._imagesCompareInstance) {
-				return element._imagesCompareInstance;
-			}
-			return new ImagesCompare(element, options);
+			const existing = instanceMap.get(el);
+			if (existing) return existing;
+			return new ImagesCompare(el, options);
 		});
 	}
 
 	public static getInstance(element: HTMLElement): ImagesCompare | undefined {
-		return element?._imagesCompareInstance;
+		return instanceMap.get(element);
 	}
 
 	private _initOnce(): void {
@@ -638,20 +636,11 @@ class ImagesCompare {
 		);
 
 		if (this._rafId) cancelAnimationFrame(this._rafId);
-		delete this.element._imagesCompareInstance;
+		instanceMap.delete(this.element);
 		return this;
 	}
 }
 
-declare global {
-	interface HTMLElement {
-		_imagesCompareInstance?: ImagesCompare;
-	}
-	interface Window {
-		ImagesCompare: typeof ImagesCompare;
-	}
-}
-
-window.ImagesCompare = ImagesCompare;
+(window as unknown as Record<string, unknown>).ImagesCompare = ImagesCompare;
 
 export default ImagesCompare;
