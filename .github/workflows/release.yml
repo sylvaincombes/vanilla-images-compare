@@ -38,6 +38,7 @@ jobs:
           cd dist
           zip -r ../vanilla-images-compare-build.zip .
       - name: Publish to npm
+        continue-on-error: true
         run: npm publish --provenance
       - name: Publish to JSR
         run: bunx jsr publish
