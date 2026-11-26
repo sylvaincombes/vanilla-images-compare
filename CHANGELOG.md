@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 _Nothing at this moment_
 
+## [1.0.2] - 2026-11-26
+
+### Changed
+
+- Remove `continue-on-error` from the npm publish step so a failed publish fails the release
+
 ## [1.0.1] - 2026-04-10
 
 ### Fixed
