@@ -1,19 +1,45 @@
+/**
+ * Before/after image comparison slider: a draggable separator reveals one
+ * image over another.
+ *
+ * ```ts
+ * import ImagesCompare from "@sylvaincombes/vanilla-images-compare";
+ *
+ * const slider = new ImagesCompare(document.querySelector(".compare")!, {
+ *   interactionMode: "drag",
+ * });
+ * slider.on("imagesCompare:changed", (event) => console.log(event));
+ * ```
+ *
+ * @module
+ */
+
 const instanceMap = new WeakMap<HTMLElement, ImagesCompare>();
 
+/** How the visitor moves the separator. */
 type InteractionMode = "drag" | "mousemove" | "click";
 
+/** Names of the custom events dispatched on the container element. */
 type ImagesCompareEvents =
 	| "imagesCompare:initialised"
 	| "imagesCompare:changed"
 	| "imagesCompare:resized";
 
+/** Options accepted by the {@linkcode ImagesCompare} constructor. */
 interface ImagesCompareOptions {
+	/** Initial visible ratio of the front image, from 0 to 1. Defaults to 0.5. */
 	initVisibleRatio?: number;
+	/** Interaction mode. Defaults to `"drag"`. */
 	interactionMode?: InteractionMode;
+	/** Default animation duration in milliseconds. Defaults to 400. */
 	animationDuration?: number;
+	/** Default animation easing name. Defaults to `"swing"`. */
 	animationEasing?: string;
+	/** Whether to add the separator line. Defaults to `true`. */
 	addSeparator?: boolean;
+	/** Whether to add the drag handle. Defaults to `true`. */
 	addDragHandle?: boolean;
+	/** Decimal places kept when rounding the ratio. Defaults to 4. */
 	precision?: number;
 }
 
@@ -39,6 +65,7 @@ interface ImagesCompareSize {
 	maxHeight: number;
 }
 
+/** A before/after slider bound to one container element. */
 class ImagesCompare {
 	private element: HTMLElement;
 	private options: Required<ImagesCompareOptions> & { roundFactor: number };
@@ -47,9 +74,13 @@ class ImagesCompare {
 		changed: "imagesCompare:changed",
 		resized: "imagesCompare:resized",
 	} as const;
+	/** Element showing the front image, once initialised. */
 	public frontElement: HTMLElement | null = null;
+	/** Element showing the back image, once initialised. */
 	public backElement: HTMLElement | null = null;
+	/** Separator line element, when `addSeparator` is enabled. */
 	public separator: HTMLElement | null = null;
+	/** Drag handle element, when `addDragHandle` is enabled. */
 	public dragHandle: HTMLElement | null = null;
 	private lastRatio = 1;
 	private size: ImagesCompareSize = {
@@ -66,6 +97,13 @@ class ImagesCompare {
 	};
 	private _handlerRefs: ImagesCompareHandlerRefs;
 
+	/**
+	 * Creates a slider on `element`, which must contain the two images.
+	 *
+	 * @param element Container holding the images to compare.
+	 * @param userOptions Options overriding the defaults.
+	 * @throws {TypeError} When `element` is not a DOM element.
+	 */
 	constructor(element: HTMLElement, userOptions: ImagesCompareOptions = {}) {
 		if (!element || !(element instanceof HTMLElement)) {
 			throw new TypeError("ImagesCompare requires a DOM element");
@@ -107,6 +145,13 @@ class ImagesCompare {
 		instanceMap.set(this.element, this);
 	}
 
+	/**
+	 * Creates a slider on every matching element, reusing existing instances.
+	 *
+	 * @param selector CSS selector, node list or array of container elements.
+	 * @param options Options applied to each newly created slider.
+	 * @returns One instance per element.
+	 */
 	public static initAll(
 		selector: string | NodeListOf<HTMLElement> | HTMLElement[],
 		options?: ImagesCompareOptions,
@@ -127,6 +172,11 @@ class ImagesCompare {
 		});
 	}
 
+	/**
+	 * Returns the slider bound to `element`, if any.
+	 *
+	 * @param element Container element the slider was created on.
+	 */
 	public static getInstance(element: HTMLElement): ImagesCompare | undefined {
 		return instanceMap.get(element);
 	}
@@ -505,6 +555,15 @@ class ImagesCompare {
 		return `inset(0 ${rightInset}px 0 0)`;
 	}
 
+	/**
+	 * Moves the separator to `ratio`, optionally animating the move.
+	 *
+	 * @param ratio Visible ratio of the front image, from 0 to 1.
+	 * @param animate Whether to animate the move. Defaults to `false`.
+	 * @param duration Animation duration in milliseconds. Defaults to the `animationDuration` option.
+	 * @param easing Animation easing name. Defaults to the `animationEasing` option.
+	 * @returns The slider, for chaining.
+	 */
 	public setValue(
 		ratio: number,
 		animate = false,
@@ -560,10 +619,16 @@ class ImagesCompare {
 		return this;
 	}
 
+	/** Returns the current visible ratio of the front image, from 0 to 1. */
 	public getValue(): number {
 		return this.lastRatio;
 	}
 
+	/**
+	 * Listens to a slider event on the container element.
+	 *
+	 * @returns The slider, for chaining.
+	 */
 	public on(
 		eventName: ImagesCompareEvents,
 		callback: EventListenerOrEventListenerObject,
@@ -572,6 +637,11 @@ class ImagesCompare {
 		return this;
 	}
 
+	/**
+	 * Stops listening to a slider event on the container element.
+	 *
+	 * @returns The slider, for chaining.
+	 */
 	public off(
 		eventName: ImagesCompareEvents,
 		callback: EventListenerOrEventListenerObject,
@@ -580,10 +650,16 @@ class ImagesCompare {
 		return this;
 	}
 
+	/** Returns the names of the custom events the slider dispatches. */
 	public events(): typeof this._events {
 		return this._events;
 	}
 
+	/**
+	 * Removes every listener the slider registered and forgets the instance.
+	 *
+	 * @returns The slider, for chaining.
+	 */
 	public destroy(): this {
 		window.removeEventListener("resize", this._handlerRefs.onResize);
 		this.element.removeEventListener("click", this._handlerRefs.onClick);

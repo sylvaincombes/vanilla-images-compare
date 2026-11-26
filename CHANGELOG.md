@@ -8,6 +8,12 @@ The format is based on [Keep a Changelog](http://keepachangelog.com/) and this p
 
 _Nothing at this moment_
 
+## [1.0.3] - 2026-11-26
+
+### Changed
+
+- Document every exported symbol (class, constructor, methods, options, types) and add a module doc, for the JSR score
+
 ## [1.0.2] - 2026-11-26
 
 ### Changed
